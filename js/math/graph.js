@@ -4,6 +4,24 @@ class Graph {
         this.segments = segments;
     }
 
+    static load(info) {
+        const points = [];
+        const segments = [];
+        for (const p of info.points) {
+            points.push(new Point(p.x, p.y));
+        }
+        for (const s of info.segments) {
+            segments.push(new Segment(
+             points.find((p) => p.equals(s.p1)),
+             points.find((p) => p.equals(s.p2))
+            
+            )
+            
+            );
+        }
+        return new Graph(points, segments);   
+    }
+
     addPoint(point) {
         this.points.push(point);
     }
