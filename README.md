@@ -132,9 +132,17 @@ The simulation includes an intelligent marking compliance engine:
 
 ## 🎥 Working Simulation Demo
 
-Below is the live recording of the simulation in action, demonstrating the clean full-screen layout, multi-car fleet driving, traffic light phase transitions (4s Red $\to$ 2s Yellow $\to$ Green), safe non-touching queue spacing, and camera follow:
+Below is the demonstration video showcasing the autonomous self-driving car simulation, multi-car fleet driving, traffic light phase transitions (4s Red $\to$ 2s Yellow $\to$ Green), safe non-touching queue spacing, and interactive world editor:
 
-![Simulation Demo](simulation_demo.webp)
+<video src="Demo%20Video.mov" controls="controls" width="100%" playsinline>
+  <source src="demo.mp4" type="video/mp4">
+  <source src="Demo%20Video.mov" type="video/quicktime">
+  Your browser does not support the video tag.
+</video>
+
+> 🎬 **Direct Links**:
+> - [▶️ Demo Video (.mov)](Demo%20Video.mov)
+> - [▶️ Demo Video (.mp4)](demo.mp4)
 
 ---
 
