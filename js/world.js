@@ -21,9 +21,30 @@ class World {
         this.roadBorders = [];
         this.buildings = [];
         this.trees = [];
+        this.laneGuides = [];
+
+        this.markings = [];
 
         this.generate();
     }
+
+   static load(info) {
+        const world = new World(new Graph());
+        world.graph = Graph.load(info.graph);
+        world.roadWidth = info.roadWidth;
+        world.roadRoundness = info.roadRoundness;
+        world.buildingWidth = info.buildingWidth;
+        world.buildingMinLength = info.buildingMinLength;
+        world.spacing = info.spacing;
+        world.treeSize = info.treeSize;
+        world.envelopes = info.envelopes.map((e) => Envelope.load(e));
+        world.roadBorders = info.roadBorders.map((b) => new Segment(b.p1, b.p2));
+        world.buildings = info.buildings.map((e) => Building.load(e));
+        world.trees = info.trees.map((t) => new Tree(t.center, info.treeSize));
+        world.laneGuides = info.laneGuides.map((g) => new Segment(g.p1, g.p2));
+        world.markings = info.markings.map((m) => Marking.load(m));
+        return world;
+}
 
     generate() {
         this.envelopes.length = 0;
@@ -44,7 +65,25 @@ class World {
 
         this.buildings = this.#generateBuildings();
         this.trees = this.#generateTrees();
+
+        this.laneGuides.length = 0;
+        this.laneGuides.push(...this.#generateLaneGuides());
     }
+
+    #generateLaneGuides() {
+  const tmpEnvelopes = [];
+  for (const seg of this.graph.segments) {
+    tmpEnvelopes.push(
+      new Envelope(
+        seg,
+        this.roadWidth / 2,
+        this.roadRoundness
+      )
+    );
+  }
+  const segments = Polygon.union(tmpEnvelopes.map((e) => e.poly));
+  return segments;
+}
 
     #generateTrees(count = 10) {
         const points = [
@@ -206,6 +245,9 @@ class World {
                 lineWidth: 15
             });
         }
+        for (const marking of this.markings) {
+  marking.draw(ctx);
+}
 
         for (const seg of this.graph.segments) {
             seg.draw(ctx, {
@@ -232,6 +274,8 @@ items.sort(
 for (const item of items) {
   item.draw(ctx, viewPoint);
 }
-}
+
+
+    }
 
 }
