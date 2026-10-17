@@ -11,8 +11,23 @@ class MarkingEditor {
     this.intent = null;
 
     this.targetSegments = targetSegments;
+  }
 
-    this.markings = world.markings;
+  get markings() {
+    return this.world && this.world.markings ? this.world.markings : [];
+  }
+
+  set markings(value) {
+    if (this.world) {
+      this.world.markings = value;
+    }
+  }
+
+  dispose() {
+    this.intent = null;
+    if (this.world && this.world.markings) {
+      this.world.markings.length = 0;
+    }
   }
 
   createMarking(center, directionVector) {
@@ -96,10 +111,6 @@ class MarkingEditor {
   }
 
   display() {
-    for (const marking of this.markings) {
-      marking.draw(this.ctx);
-    }
-
     if (this.intent) {
       this.intent.draw(this.ctx);
     }
