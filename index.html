@@ -1,45 +1,91 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>World Editor</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>World Editor & Autonomous Self-Driving Car</title>
         <link rel="stylesheet" href="style.css"/>
     </head>
 
     <body>
-        <h1>World Editor</h1>
+        <div class="top-bar">
+            <h1>World Editor & Autonomous Self-Driving Car</h1>
+
+            <!-- Telemetry HUD Pill -->
+            <div id="simHUD" class="hud-panel">
+                <div class="hud-stat">
+                    <span class="hud-label">Fleet</span>
+                    <span id="hudFleet" class="hud-value">1 Car</span>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">Car State</span>
+                    <span id="hudState" class="hud-value">Parked</span>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">Drive Mode</span>
+                    <span id="hudControl" class="hud-value">Autonomous AI</span>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">Speed</span>
+                    <span id="hudSpeed" class="hud-value">0.0</span>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">Distance</span>
+                    <span id="hudDist" class="hud-value">0 px</span>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">Road Signal</span>
+                    <span id="hudStatus" class="hud-badge">Ready</span>
+                </div>
+            </div>
+        </div>
 
         <canvas id="myCanvas"></canvas>
 
-        <div id="controls">
-            <button onclick="dispose()">🗑️</button>
-            <button onclick="save()">💾</button>
-            <label for="fileInput" class="file-input-label">
-                📁
+        <!-- Unified Controls Toolbar -->
+        <div id="controls" class="controls">
+            <!-- World Editor Tools -->
+            <button onclick="dispose()" title="Clear Entire World (No glitches)">🗑️ Clear World</button>
+            <button onclick="save()" title="Save .world file">💾 Save</button>
+            <label for="fileInput" class="file-input-label" title="Load .world file">
+                📁 Load
                 <input
-                type="file"
-                id="fileInput"
-                accept=".world"
-                onchange="load(event)"
-            />
+                    type="file"
+                    id="fileInput"
+                    accept=".world"
+                    onchange="load(event)"
+                />
             </label>
-            &nbsp;
-            <button id="graphBtn" onclick="setMode('graph')">🌐</button>
-            <button id="stopBtn" onclick="setMode('stop')">🛑</button>
-            <button id="crossing" onclick="setMode('crossing')">yes</button>
-             <button id="startBtn" onclick="setMode('start')">start</button>
+            <span class="divider">|</span>
+            <button id="graphBtn" onclick="setMode('graph')" title="Edit Roads (Left-click: Add node, Right-click: Delete)">🌐 Roads</button>
+            <button id="stopBtn" onclick="setMode('stop')" title="Place Stop Signs on road lanes">🛑 Stop Sign</button>
+            <button id="trafficLightBtn" onclick="setMode('trafficLight')" title="Place Traffic Lights (Red, Yellow, Green)">🚦 Traffic Light</button>
+            <button id="crossing" onclick="setMode('crossing')" title="Place Pedestrian Crossings">🚶 Crossing</button>
+            <button id="startBtn" onclick="setMode('start')" title="Click on road to place/spawn a car">📍 Spawn Point</button>
+            <span class="divider">|</span>
+            <!-- Car Operations -->
+            <button id="simToggleBtn" class="primary-btn" onclick="toggleCarDrive()" title="Start / Pause all cars">▶️ Start Cars</button>
+            <button id="addCarBtn" onclick="addNewCar()" title="Add another car (Randomly Porsche or G-Wagon)">➕ Add Car</button>
+            <button id="removeCarsBtn" class="danger-btn" onclick="removeAllCars()" title="Remove all cars from the track">❌ Remove Cars</button>
+            <button id="resetCarBtn" onclick="resetCar()" title="Reset all cars to starting position">⏮️ Reset Cars</button>
+            <button id="manualToggleBtn" onclick="toggleManualDrive()" title="Drive lead car with WASD / Arrows">🎮 Manual Drive</button>
+            <button id="camToggleBtn" onclick="toggleCameraFollow()" title="Smooth Camera tracking">🎥 Cam: OFF</button>
         </div>
-        <script src="js/world.js"></script>
-        <script src="js/viewport.js"></script>
-        <script src="js/markings/marking.js"></script>
-        <script src="js/markings/stop.js"></script>
-        <script src="js/markings/start.js"></script>
-        <script src="js/markings/crossing.js"></script>
-          <script src="js/editors/markingEditor.js"></script>
-        <script src="js/editors/graphEditor.js"></script>
-        <script src="js/editors/stopEditor.js"></script>
-        <script src="js/editors/startEditor.js"></script>
-        <script src="js/editors/crossingEditor.js"></script>
+
+        <!-- Core Environment Scripts -->
+        <script src="js/world.js?v=3"></script>
+        <script src="js/viewport.js?v=3"></script>
+        <script src="js/markings/marking.js?v=3"></script>
+        <script src="js/markings/stop.js?v=3"></script>
+        <script src="js/markings/start.js?v=3"></script>
+        <script src="js/markings/crossing.js?v=3"></script>
+        <script src="js/markings/trafficLight.js?v=3"></script>
+        <script src="js/editors/markingEditor.js?v=3"></script>
+        <script src="js/editors/graphEditor.js?v=3"></script>
+        <script src="js/editors/stopEditor.js?v=3"></script>
+        <script src="js/editors/startEditor.js?v=3"></script>
+        <script src="js/editors/crossingEditor.js?v=3"></script>
+        <script src="js/editors/trafficLightEditor.js?v=3"></script>
         <script src="js/items/tree.js"></script>
         <script src="js/items/building.js"></script>
         <script src="js/math/utils.js"></script>
@@ -48,32 +94,203 @@
         <script src="js/primitives/segment.js"></script>
         <script src="js/primitives/polygon.js"></script>
         <script src="js/primitives/envelope.js"></script>
-        <script>
-            myCanvas.height = 600;
-            myCanvas.width = 600;
 
+        <!-- Self-Driving Car System -->
+        <script src="js/controls.js"></script>
+        <script src="js/sensor.js"></script>
+        <script src="js/network.js"></script>
+        <script src="js/car.js"></script>
+        <script src="js/simulation.js"></script>
+
+        <script>
+            // Initialize full-screen canvas resolution
+            myCanvas.width = window.innerWidth;
+            myCanvas.height = window.innerHeight;
             const ctx = myCanvas.getContext("2d");
 
+            let world = null;
+            let graph = null;
+            let viewport = null;
+            let tools = null;
+            let simulation = null;
+            let oldGraphHash = "";
+            let cameraFollow = false;
+
+            // Load saved world or generate clean default circuit
             const worldstring = localStorage.getItem("world");
-            const worldInfo = worldstring ? JSON.parse(worldstring) : null;
-            let world = worldInfo
-    ? World.load(worldInfo)
-    : new World(new Graph());
+            let worldInfo = null;
+            try {
+                worldInfo = worldstring ? JSON.parse(worldstring) : null;
+            } catch (e) {
+                worldInfo = null;
+            }
 
-            const graph = world.graph;
+            function createDefaultWorld() {
+                const points = [
+                    new Point(120, 160),
+                    new Point(340, 160),
+                    new Point(490, 260),
+                    new Point(490, 420),
+                    new Point(320, 510),
+                    new Point(130, 470),
+                    new Point(60, 320)
+                ];
 
-            const viewport = new Viewport(myCanvas);
+                const segments = [
+                    new Segment(points[0], points[1]),
+                    new Segment(points[1], points[2]),
+                    new Segment(points[2], points[3]),
+                    new Segment(points[3], points[4]),
+                    new Segment(points[4], points[5]),
+                    new Segment(points[5], points[6]),
+                    new Segment(points[6], points[0])
+                ];
+
+                const g = new Graph(points, segments);
+                const w = new World(g);
+
+                // Stop sign on the right straightaway (x=490, y=340)
+                const stopCenter = new Point(490, 340);
+                const stopDir = new Point(0, 1);
+                w.markings.push(
+                    new Stop(
+                        stopCenter,
+                        stopDir,
+                        w.roadWidth / 2,
+                        w.roadWidth / 2
+                    )
+                );
+
+                // Animated Traffic Light on the left straightaway (x=90, y=240)
+                const tlCenter = new Point(90, 240);
+                const tlDir = normalize(new Point(60, -160));
+                w.markings.push(
+                    new TrafficLight(
+                        tlCenter,
+                        tlDir,
+                        w.roadWidth / 2,
+                        w.roadWidth / 2
+                    )
+                );
+
+                // Pedestrian Crossing on bottom straightaway (x=225, y=490)
+                const crossCenter = new Point(225, 490);
+                const crossDir = normalize(new Point(-1, -0.2));
+                w.markings.push(
+                    new Crossing(
+                        crossCenter,
+                        crossDir,
+                        w.roadWidth,
+                        w.roadWidth / 2
+                    )
+                );
+
+                return w;
+            }
+
+            if (worldInfo && worldInfo.graph && worldInfo.graph.points && worldInfo.graph.points.length > 2 && worldInfo.graph.segments && worldInfo.graph.segments.length > 2) {
+                world = World.load(worldInfo);
+                if (!world.envelopes || world.envelopes.length === 0) {
+                    world.generate();
+                }
+            } else {
+                world = createDefaultWorld();
+            }
+
+            // Clear any old static start markings from saved world so no phantom car decal appears on road
+            if (world && world.markings) {
+                for (let i = world.markings.length - 1; i >= 0; i--) {
+                    const m = world.markings[i];
+                    if (m.type === "start" || (typeof Start !== "undefined" && m instanceof Start)) {
+                        world.markings.splice(i, 1);
+                    }
+                }
+
+                // If world has road laneGuides but no traffic light, add one to the circuit
+                const hasTL = world.markings.some((m) => m.type === "trafficLight" || (m instanceof TrafficLight));
+                if (!hasTL && world.laneGuides && world.laneGuides.length > 0) {
+                    const guide = world.laneGuides[Math.min(2, world.laneGuides.length - 1)];
+                    const tlCenter = lerp2D(guide.p1, guide.p2, 0.5);
+                    const tlDir = guide.directionVector();
+                    world.markings.push(
+                        new TrafficLight(
+                            tlCenter,
+                            tlDir,
+                            world.roadWidth / 2,
+                            world.roadWidth / 2
+                        )
+                    );
+                }
+            }
+
+            graph = world.graph;
+            viewport = new Viewport(myCanvas);
+
+            function centerViewportOnWorld() {
+                if (!world || !world.graph || !world.graph.points || world.graph.points.length === 0) {
+                    viewport.offset = scale(viewport.center, -1);
+                    return;
+                }
+                const pts = world.graph.points;
+                const minX = Math.min(...pts.map((p) => p.x));
+                const maxX = Math.max(...pts.map((p) => p.x));
+                const minY = Math.min(...pts.map((p) => p.y));
+                const maxY = Math.max(...pts.map((p) => p.y));
+                const worldCenterX = (minX + maxX) / 2;
+                const worldCenterY = (minY + maxY) / 2;
+
+                const worldW = (maxX - minX) + 280;
+                const worldH = (maxY - minY) + 280;
+                const scaleX = myCanvas.width / Math.max(1, worldW);
+                const scaleY = myCanvas.height / Math.max(1, worldH);
+                const fitScale = Math.min(1.35, Math.max(0.65, Math.min(scaleX, scaleY)));
+                viewport.zoom = 1 / fitScale;
+
+                viewport.offset = new Point(-worldCenterX, -worldCenterY);
+            }
+
+            centerViewportOnWorld();
+
+            function resizeCanvas() {
+                myCanvas.width = window.innerWidth;
+                myCanvas.height = window.innerHeight;
+                if (viewport) {
+                    viewport.center = new Point(myCanvas.width / 2, myCanvas.height / 2);
+                    centerViewportOnWorld();
+                }
+            }
+            window.addEventListener("resize", resizeCanvas);
+
             const crossingBtn = document.getElementById("crossing");
 
-          const tools = {
-  graph: { button: graphBtn, editor: new GraphEditor(viewport, graph) },
-  stop: { button: stopBtn, editor: new StopEditor(viewport, world) },
-  crossing: { button: crossingBtn, editor: new CrossingEditor(viewport, world) },
-  start: { button: startBtn, editor: new StartEditor(viewport, world) }
-};
+            // Editor tools setup
+            tools = {
+                graph: { button: document.getElementById("graphBtn"), editor: new GraphEditor(viewport, graph) },
+                stop: { button: document.getElementById("stopBtn"), editor: new StopEditor(viewport, world) },
+                trafficLight: { button: document.getElementById("trafficLightBtn"), editor: new TrafficLightEditor(viewport, world) },
+                crossing: { button: crossingBtn, editor: new CrossingEditor(viewport, world) },
+                start: { button: document.getElementById("startBtn"), editor: new StartEditor(viewport, world) }
+            };
 
-            let oldGraphHash = graph.hash();
+            // Initialize Simulation with car fleet support (randomly Porsche 911 or G-Wagon)
+            simulation = new Simulation(world);
 
+            oldGraphHash = graph.hash();
+            cameraFollow = false;
+
+            // UI Elements
+            const simToggleBtn = document.getElementById("simToggleBtn");
+            const manualToggleBtn = document.getElementById("manualToggleBtn");
+            const camToggleBtn = document.getElementById("camToggleBtn");
+
+            const hudFleet = document.getElementById("hudFleet");
+            const hudState = document.getElementById("hudState");
+            const hudControl = document.getElementById("hudControl");
+            const hudSpeed = document.getElementById("hudSpeed");
+            const hudDist = document.getElementById("hudDist");
+            const hudStatus = document.getElementById("hudStatus");
+
+            // Enable Roads Editor by default
             setMode("graph");
 
             animate();
@@ -81,81 +298,229 @@
             function animate() {
                 viewport.reset();
 
+                // Regenerate world when graph structure changes
                 if (graph.hash() !== oldGraphHash) {
                     world.generate();
+                    simulation.syncCarsWithWorld();
+                    if (tools.stop) tools.stop.editor.targetSegments = world.laneGuides;
+                    if (tools.trafficLight) tools.trafficLight.editor.targetSegments = world.laneGuides;
+                    if (tools.start) tools.start.editor.targetSegments = world.laneGuides;
+                    if (tools.crossing) tools.crossing.editor.targetSegments = world.graph.segments;
                     oldGraphHash = graph.hash();
+                }
+
+                // Smooth camera follow on lead car if enabled
+                if (cameraFollow && simulation.isRunning && simulation.car) {
+                    const targetOffset = new Point(
+                        -simulation.car.x,
+                        -simulation.car.y
+                    );
+                    viewport.offset = lerp2D(viewport.offset, targetOffset, 0.08);
                 }
 
                 const viewPoint = scale(viewport.getOffset(), -1);
                 world.draw(ctx, viewPoint);
+
+                // Update cars only when started
+                simulation.update();
+
+                // Draw cars with 2 electric blue sensor rays and white contact dots
+                simulation.draw(ctx);
+
+                // Render editor interactive overlay
                 ctx.globalAlpha = 0.3;
                 for (const tool of Object.values(tools)) {
                     tool.editor.display();
                 }
+                ctx.globalAlpha = 1.0;
 
+                // Update live HUD
+                updateHUD();
 
                 requestAnimationFrame(animate);
             }
 
-            function dispose() {
-                tools["graph"].editor.dispose();
-                world.markings.length = 0;
+            function updateHUD() {
+                const stats = simulation.getStats();
+                hudFleet.textContent = `${stats.carCount} Car${stats.carCount === 1 ? "" : "s"}`;
+                hudState.textContent = stats.isRunning ? "Driving" : (stats.carCount === 0 ? "Empty" : "Parked");
+                hudControl.textContent = stats.isManual ? "Manual (WASD/Arrows)" : "Autonomous AI";
+                hudSpeed.textContent = stats.speed;
+                hudDist.textContent = `${stats.distance} px`;
+                hudStatus.textContent = stats.status;
+
+                hudStatus.className = "hud-badge";
+                if (stats.status.includes("STOP") || stats.status.includes("RED")) {
+                    hudStatus.classList.add("yielding");
+                } else if (stats.status.includes("Crossing") || stats.status.includes("YELLOW") || stats.status.includes("Queued")) {
+                    hudStatus.classList.add("caution");
+                } else if (stats.status === "Crashed") {
+                    hudStatus.classList.add("crashed");
+                }
             }
 
-           function save() {
-  const element = document.createElement("a");
-  element.setAttribute(
-    "href",
-    "data:application/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(world))
-  );
+            // Car Fleet Controls
+            function toggleCarDrive() {
+                const isRunning = simulation.toggle();
+                simToggleBtn.textContent = isRunning ? "⏸️ Pause Cars" : "▶️ Start Cars";
+                simToggleBtn.classList.toggle("running", isRunning);
+                updateHUD();
+            }
 
-  const fileName = "name.world";
-  element.setAttribute("download", fileName);
+            function addNewCar() {
+                const car = simulation.addCar();
+                if (car) {
+                    updateHUD();
+                }
+            }
 
-  element.click();
+            function removeAllCars() {
+                simulation.removeAllCars();
+                simToggleBtn.textContent = "▶️ Start Cars";
+                simToggleBtn.classList.remove("running");
+                updateHUD();
+            }
 
-  localStorage.setItem("world", JSON.stringify(world));
-}
+            function resetCar() {
+                simulation.reset();
+                simToggleBtn.textContent = "▶️ Start Cars";
+                simToggleBtn.classList.remove("running");
+                updateHUD();
+            }
 
-function load(event) {
-  const file = event.target.files[0];
+            function toggleManualDrive() {
+                const isManual = simulation.toggleManual();
+                manualToggleBtn.textContent = isManual ? "🤖 Auto AI" : "🎮 Manual Drive";
+                manualToggleBtn.classList.toggle("active-tool", isManual);
+            }
 
-  if (!file) {
-    alert("No file selected.");
-    return;
-  }
+            function toggleCameraFollow() {
+                cameraFollow = !cameraFollow;
+                camToggleBtn.textContent = cameraFollow ? "🎥 Cam: ON" : "🎥 Cam: OFF";
+                camToggleBtn.classList.toggle("active-tool", cameraFollow);
+            }
 
-  const reader = new FileReader();
-  reader.readAsText(file);
-
-  reader.onload = (evt) => {
-    const fileContent = evt.target.result;
-    const jsonData = JSON.parse(fileContent);
-    world = World.load(jsonData);
-    localStorage.setItem("world", JSON.stringify(world));
-    location.reload();
-  }
-}
-
+            // Editor Controls (100% Preserved)
             function setMode(mode) {
                 disableEditors();
-
-                
+                if (tools[mode]) {
                     tools[mode].button.style.backgroundColor = "white";
+                    tools[mode].button.style.color = "#0f172a";
                     tools[mode].button.style.filter = "";
                     tools[mode].editor.enable();
-                        
                 }
-            
+            }
 
             function disableEditors() {
-                 for (const tool of Object.values(tools)) {
-                    
-                    tool.button.style.backgroundColor = "gray";
+                for (const tool of Object.values(tools)) {
+                    tool.button.style.backgroundColor = "";
+                    tool.button.style.color = "";
                     tool.button.style.filter = "grayscale(100%)";
                     tool.editor.disable();
                 }
+            }
+
+            // Clean Clear: completely clears world, markings, and cars with ZERO glitches!
+            function dispose() {
+                // 1. Dispose all active tool editors (graph and marking editors)
+                for (const tool of Object.values(tools)) {
+                    if (tool && tool.editor) {
+                        if (typeof tool.editor.dispose === "function") {
+                            tool.editor.dispose();
+                        }
+                        tool.editor.intent = null;
+                        if (tool.editor.markings) {
+                            tool.editor.markings.length = 0;
+                            tool.editor.markings = [];
+                        }
+                        if (tool.editor.targetSegments && Array.isArray(tool.editor.targetSegments)) {
+                            tool.editor.targetSegments.length = 0;
+                            tool.editor.targetSegments = [];
+                        }
+                    }
+                }
+
+                // 2. Clear all world elements: markings, lane guides, borders, buildings, trees, graph
+                if (world) {
+                    world.markings.length = 0;
+                    world.markings = [];
+                    world.roadBorders.length = 0;
+                    world.roadBorders = [];
+                    world.laneGuides.length = 0;
+                    world.laneGuides = [];
+                    world.envelopes.length = 0;
+                    world.envelopes = [];
+                    world.buildings.length = 0;
+                    world.buildings = [];
+                    world.trees.length = 0;
+                    world.trees = [];
+                    if (world.graph) world.graph.dispose();
+                }
+
+                // 3. Re-link all editors directly to the emptied markings array
+                for (const tool of Object.values(tools)) {
+                    if (tool && tool.editor) {
+                        tool.editor.world = world;
+                        tool.editor.markings = world.markings;
+                    }
+                }
+
+                // 4. Clear simulation and active cars
+                simulation.clear();
+                simToggleBtn.textContent = "▶️ Start Cars";
+                simToggleBtn.classList.remove("running");
+                localStorage.removeItem("world");
+                updateHUD();
+            }
+
+            function save() {
+                const element = document.createElement("a");
+                element.setAttribute(
+                    "href",
+                    "data:application/json;charset=utf-8," +
+                    encodeURIComponent(JSON.stringify(world))
+                );
+
+                const fileName = "name.world";
+                element.setAttribute("download", fileName);
+                element.click();
+
+                localStorage.setItem("world", JSON.stringify(world));
+            }
+
+            function load(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    alert("No file selected.");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = (evt) => {
+                    const fileContent = evt.target.result;
+                    const jsonData = JSON.parse(fileContent);
+                    world = World.load(jsonData);
+                    if (world && world.markings) {
+                        world.markings = world.markings.filter(
+                            (m) => m.type !== "start" && !(m instanceof Start)
+                        );
+                    }
+                    graph = world.graph;
+                    tools.graph.editor.graph = graph;
+                    tools.stop.editor.world = world;
+                    tools.stop.editor.targetSegments = world.laneGuides;
+                    tools.trafficLight.editor.world = world;
+                    tools.trafficLight.editor.targetSegments = world.laneGuides;
+                    tools.crossing.editor.world = world;
+                    tools.crossing.editor.targetSegments = world.graph.segments;
+                    tools.start.editor.world = world;
+                    tools.start.editor.targetSegments = world.laneGuides;
+                    simulation.world = world;
+                    simulation.reset();
+                    localStorage.setItem("world", JSON.stringify(world));
+                    location.reload();
+                };
             }
         </script>
     </body>
